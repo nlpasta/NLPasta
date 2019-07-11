@@ -13,6 +13,9 @@ businesses = []
 # Maps business ids to its index in data[] and businesses[]
 business_index = {}
 
+# Maps review ids to corresponding review text
+reviews_to_text = []
+
 
 @app.route('/api/businesses', methods=['GET'])
 def get_businesses():
@@ -45,13 +48,13 @@ if __name__ == '__main__':
     data = manager.load_data('src/data.json')
     businesses = manager.get_businesses(data)
     business_index = manager.map_id_to_index(businesses)
-
+    reviews_to_text = manager.map_reviews_to_text(data)
+    print(reviews_to_text[0])
     # anaysis
     r_to_text = {}
-    r_to_analysis, keywords = manager.robertsstuff(r_to_text)
+    # r_to_analysis, keywords = manager.robertsstuff(r_to_text)
 
     # merge reviews with r_to_analysis
-
 
     port = int(os.getenv('PORT', 8080))
     app.run(host='0.0.0.0', port=port, debug=True)
