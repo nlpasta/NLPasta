@@ -1,7 +1,6 @@
 import React from 'react'
 import styled from 'styled-components'
 
-// import Tag from './Tag'
 import { Tag, Tile as CarbonTile } from 'carbon-components-react'
 
 
@@ -35,7 +34,7 @@ const Divider = styled.hr`
 const Content = styled.p`
   padding: 1rem 0;
   font-size: 1.2rem;
-  line-height: 1.5;
+  line-height: calc(1.5 + 0);
 `
 
 function ReviewCard(props) {
