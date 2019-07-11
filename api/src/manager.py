@@ -14,13 +14,7 @@ def get_businesses(data):
             if key == 'reviews':
                 continue
             business[key] = value
-
-        # if 'reviews' in business:
-        #     business.pop('reviews')
-            # del business['reviews']
         businesses.append(business)
-    # businesses = {}
-    # for key in data.keys
     return businesses
 
 
@@ -33,10 +27,10 @@ def map_id_to_index(businesses):
     return map
 
 
-def get_reviews(id, business_index, data):
+def get_reviews(id, business_index, data, page):
     if id not in business_index:
         return []
     index = business_index[id]
-    reviews = data[index]['reviews']
+    reviews = data[index]['reviews'][(page * 5):(page * 5 + 5)]
     return reviews
 

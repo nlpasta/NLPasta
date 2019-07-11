@@ -1,4 +1,4 @@
-from flask import Flask, jsonify
+from flask import Flask, jsonify, request
 from flask_cors import CORS
 import os
 import manager
@@ -6,8 +6,11 @@ import manager
 app = Flask(__name__)
 CORS(app)
 
+# Holds data.json in same structure
 data = []
+# List of dictionaries representing each business
 businesses = []
+# Maps business ids to its index in data[] and businesses[]
 business_index = {}
 
 
@@ -18,7 +21,9 @@ def get_businesses():
 
 @app.route('/api/business/<id>/reviews', methods=['GET'])
 def get_reviews(id):
-    return jsonify(manager.get_reviews(id, business_index, data))
+    page_num = int(request.args.get('page')) if 'page' in request.args else 0
+    reviews = manager.get_reviews(id, business_index, data, page_num)
+    return jsonify(reviews)
 
 
 if __name__ == '__main__':
