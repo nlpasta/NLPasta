@@ -27,10 +27,26 @@ def map_id_to_index(businesses):
     return map
 
 
-def get_reviews(id, business_index, data, page):
-    if id not in business_index:
+def get_reviews(business_id, business_index, data, page):
+    if business_id not in business_index:
         return []
-    index = business_index[id]
+    index = business_index[business_id]
     reviews = data[index]['reviews'][(page * 5):(page * 5 + 5)]
     return reviews
+
+# depracated
+def get_old_reviews(business_id, business_index, data, page):
+    if business_id not in business_index:
+        return []
+    index = business_index[business_id]
+    reviews = data[index]['reviews'][(page * 5):(page * 5 + 5)]
+    return reviews
+
+
+def robertsstuff(r_to_text):
+    pass
+
+
+def get_reviews_with_keyword(keyword, data):
+    pass
 
