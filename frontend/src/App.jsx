@@ -1,8 +1,15 @@
-import React from 'react';
-// import logo from './logo.svg';
-// import './App.css';
+import React, { useEffect, useState } from 'react';
 
-import { Tile } from 'carbon-components-react'
+import Container from './components/Container'
+import {
+  Header as CarbonHeader,
+  HeaderName,
+  HeaderNavigation,
+  HeaderMenu,
+  HeaderMenuItem
+} from "carbon-components-react/lib/components/UIShell"
+import ReviewCard from './components/ReviewCard';
+import { getReviews } from './api';
 
 const reviews = [
   {
@@ -12,26 +19,104 @@ const reviews = [
     sentiment: 5,
     topics: ['food', 'drink', 'restaurant'],
     keywords: [ 'tacos' ],
-    question: true
+    question: true,
+    submitter: 'Barack Obama',
+    submissionDate: '9/10/2019'
   },
   {
     text: 'Your Taco Truck',
-    sentiment: 5,
+    sentiment: -2,
     topics: ['food', 'drink', 'restaurant'],
     keywords: ['tacos'],
-    question: true
-  }
+    question: true,
+    submitter: 'Donald Trump',
+    submissionDate: '9/2/2019'
+  },
+  {
+    text: 'Your Taco Truck',
+    sentiment: -2,
+    topics: ['food', 'drink', 'restaurant'],
+    keywords: ['tacos'],
+    question: true,
+    submitter: 'Donald Trump',
+    submissionDate: '9/2/2019'
+  },
+  {
+    text: 'Your Taco Truck',
+    sentiment: -2,
+    topics: ['food', 'drink', 'restaurant'],
+    keywords: ['tacos'],
+    question: true,
+    submitter: 'Donald Trump',
+    submissionDate: '9/2/2019'
+  },
+  {
+    text: 'Your Taco Truck',
+    sentiment: -2,
+    topics: ['food', 'drink', 'restaurant'],
+    keywords: ['tacos'],
+    question: true,
+    submitter: 'Donald Trump',
+    submissionDate: '9/2/2019'
+  },
+  {
+    text: 'Your Taco Truck',
+    sentiment: -2,
+    topics: ['food', 'drink', 'restaurant'],
+    keywords: ['tacos'],
+    question: true,
+    submitter: 'Donald Trump',
+    submissionDate: '9/2/2019'
+  },
+  {
+    text: 'Your Taco Truck',
+    sentiment: -2,
+    topics: ['food', 'drink', 'restaurant'],
+    keywords: ['tacos'],
+    question: true,
+    submitter: 'Donald Trump',
+    submissionDate: '9/2/2019'
+  },
 ]
 
+function Header() {
+  return (
+    <CarbonHeader aria-label="IBM Platform Name">
+      <Container>
+        <HeaderName href="#" prefix="IBM">
+          [Platform]
+        </HeaderName>
+      {/* <HeaderNavigation aria-label="IBM [Platform]">
+        <HeaderMenuItem href="#">Link 1</HeaderMenuItem>
+        <HeaderMenuItem href="#">Link 2</HeaderMenuItem>
+        <HeaderMenuItem href="#">Link 3</HeaderMenuItem>
+        <HeaderMenu aria-label="Link 4" menuLinkName="Link 4">
+          <HeaderMenuItem href="#">Sub-link 1</HeaderMenuItem>
+          <HeaderMenuItem href="#">Sub-link 2</HeaderMenuItem>
+          <HeaderMenuItem href="#">Sub-link 3</HeaderMenuItem>
+        </HeaderMenu>
+      </HeaderNavigation> */}
+      </Container>
+    </CarbonHeader>
+  )
+}
+
 function App() {
+  const [ reviews, setReviews ] = useState([])
+
+  useEffect(() => {
+    getReviews().then(reviews => {
+      console.log(reviews)
+      setReviews(reviews)
+    })
+  }, [])
+
   return (
     <div className="App">
+      <Header />
+      <div id='nav-spacer' style={{ height: 'calc(48px + 1rem)' }} />
       <div className="container" style={{ margin: 'auto', maxWidth: '1024px' }} >
-        {reviews.map(review => 
-          <Tile key={review.text} style={{ margin: '2em auto' }}>
-            <h2>{review.text}</h2>
-          </Tile>
-        )}
+        {reviews.map(review => <ReviewCard review={{...review, sentiment: 4, topics: ['food'] }} />)}
       </div>
     </div>
   );
