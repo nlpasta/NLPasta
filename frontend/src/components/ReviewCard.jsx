@@ -37,11 +37,13 @@ const Divider = styled.hr`
 const Content = styled.p`
   padding: 1rem 0;
   font-size: 1.2rem;
-  line-height: calc(1.5 + 0);
+  line-height: calc(1.5 + 0.2);
 `
 
 const Keyword = styled.span`
   color: ${({ sentiment }) => sentiment > 0 ? 'mediumseagreen' : 'tomato' };
+  padding-bottom: 3px;
+  border-bottom: 0.13rem solid ${({ sentiment }) => sentiment > 0 ? 'mediumseagreen' : 'tomato' };
 `
 
 const Text = styled.span``
