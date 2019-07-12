@@ -19,7 +19,7 @@ function KeywordReviews(props) {
 
   return (
     <>
-      {redirect && <Redirect to={`/${searchTerm}`} />}
+      {redirect && <Redirect to={`/${searchTerm.replace(/\s/g, '-')}`} />}
       <Search
         style={{ backgroundColor: '#fff' }}
         placeHolderText="Find your keywords (e.g. staff or location)"
