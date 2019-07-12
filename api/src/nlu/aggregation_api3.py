@@ -17,6 +17,7 @@ class watson_helper:
         self.all_keywords_arr = [] #keyword_object[]
         self.meta_score_dict = {} #<keyword text (not metadata), score>
         self.final_rv = []
+        self.feedback_sentiment = {}
 
     """
     Takes in single review, analyzes the text. Puts the keywords in raw_watson_dict
@@ -84,3 +85,13 @@ class watson_helper:
         for keyword in self.meta_score_dict.keys():
             rel = self.most_relevant_feedback_for_keyword(keyword)
             self.final_rv.append({'keyword': keyword, 'relevance': rel, 'meta_score': self.meta_score_dict[keyword]})
+
+    def entire_feedback_sentiment(self, id):
+        response = self.nlu.analyze(
+            text=self.input_dict[id],
+            features=Features(sentiment=SentimentOptions(document=True))).get_result()
+        self.feedback_sentiment[id] = response['sentiment']['document']['score']
+
+    def all_entire_feedback_sentiment(self):
+        for id in self.input_dict.keys():
+            self.entire_feedback_sentiment(id)

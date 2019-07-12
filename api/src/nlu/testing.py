@@ -52,10 +52,10 @@ watson = watson_helper(data)
 for id in watson.input_dict:
     watson.analyze_review_text(id)
 
-print(watson.raw_watson_dict)
-print(watson.keyword_dict)
-
 watson.all_keywords()
 watson.meta_score()
 watson.keyword_relevance()
-print(watson.final_rv)
+watson.all_entire_feedback_sentiment()
+#print(watson.final_rv)
+#print(watson.raw_watson_dict)
+print(watson.feedback_sentiment)
