@@ -10,5 +10,5 @@ class keywordx:
     def __repr__(self):
         return self.text
 
-    def __eq_(self, other):
-        return other == self or other == self.txt
+    def __eq__(self, other):
+        return other is self or other == self.text

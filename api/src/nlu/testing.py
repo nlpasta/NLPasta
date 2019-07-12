@@ -55,4 +55,5 @@ print(watson.keyword_dict)
 
 watson.all_keywords()
 watson.meta_score()
-print(watson.meta_score_dict)
+watson.keyword_relevance()
+print(watson.final_rv)

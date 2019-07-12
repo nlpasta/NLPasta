@@ -16,6 +16,7 @@ class watson_helper:
         self.keyword_dict = {} #<id, keyword_object[]>
         self.all_keywords_arr = [] #keyword_object[]
         self.meta_score_dict = {} #<keyword text (not metadata), score>
+        self.final_rv = []
 
     """
     Takes in single review, analyzes the text. Puts the keywords in raw_watson_dict
@@ -56,24 +57,30 @@ class watson_helper:
 
     def keyword_relevance_in_feedback(self, target_keyword, id):
         for keyword in self.keyword_dict[id]:
-            if keyword == 
-        else:
-            return 0
-
-        keywords_obj_for_id = self.keyword_dict[id]
-        keyword_text_array = []
-        for keyword in keywords_obj_for_id:
-            keyword_text_array.append(keyword.text)
-        if target_keyword in keyword_text_array:
-            return
-        else:
-            return 0
-
+            if keyword == target_keyword:
+                return keyword.relevance
+        return 0
 
     """
     Takes in a keyword, iterates through ALL the feedback and returns an array of ids in ascending order
     of keyword relevance in feedback
     """
     def most_relevant_feedback_for_keyword(self, keyword):
+        rv = []
         for id in self.input_dict.keys():
-            pass
+            relevance = self.keyword_relevance_in_feedback(keyword, id)
+            rv.append((id, relevance))
+        rv.sort(key=lambda tup: tup[1])
+        final_rv = []
+        for tup in rv:
+            if tup[1] != 0:
+                final_rv.append(tup[0])
+        return final_rv
+
+    """
+    2d arrays of keywords and relevance
+    """
+    def keyword_relevance(self):
+        for keyword in self.meta_score_dict.keys():
+            rel = self.most_relevant_feedback_for_keyword(keyword)
+            self.final_rv.append({'keyword': keyword, 'relevance': rel, 'meta_score': self.meta_score_dict[keyword]})
