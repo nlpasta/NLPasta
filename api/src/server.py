@@ -35,11 +35,10 @@ def get_reviews(id):
 
 @app.route('/api/business/<id>/keyword/<keyword>', methods=['GET'])
 def get_reviews_with_keyword(id, keyword):
-    reviews = []
-    # get reviews
-    manager.get_reviews_with_keyword(keyword, data)
-    return jsonify(reviews)
-
+    relevant_reviews = []
+    # get relevant reviews
+    relevant_reviews = manager.get_reviews_with_keyword(keyword, data[business_index[id]])
+    return jsonify(relevant_reviews)
 
 if __name__ == '__main__':
     data = manager.load_data('src/data.json')

@@ -47,6 +47,15 @@ def robertsstuff(r_to_text):
     pass
 
 
-def get_reviews_with_keyword(keyword, data):
-    pass
+def get_reviews_with_keyword(keyword, data_for_restaurant):
+    # data_for_restaurant is a dictionary 
+    relevant_reviews = []
+    reviews = data_for_restaurant[index]['reviews'][(page * 5):(page * 5 + 5)] 
+    for i in range(len(reviews)):
+        review = reviews[i]
+        for word in review["text"]:
+            # identify match -- possibly using watson word similarity API 
+            if word.lower() == keyword.lower(): 
+                relevant_reviews.append(review) 
+    return relevant_reviews
 
