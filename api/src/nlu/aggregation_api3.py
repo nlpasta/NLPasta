@@ -95,3 +95,9 @@ class watson_helper:
     def all_entire_feedback_sentiment(self):
         for id in self.input_dict.keys():
             self.entire_feedback_sentiment(id)
+
+    def get_sentiment(self, text):
+        response = self.nlu.analyze(
+            text=text,
+            features=Features(sentiment=SentimentOptions(document=True))).get_result()
+        return response['sentiment']['document']['score']

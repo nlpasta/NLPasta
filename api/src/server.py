@@ -16,6 +16,7 @@ business_index = {}
 # Maps review ids to corresponding review text
 reviews_to_text = []
 
+# List of lists of dicts mapping review_id to overall sentiment
 analyzed_reviews = []
 analyzed_keywords = []
 
@@ -74,6 +75,9 @@ if __name__ == '__main__':
     print('Finished analyzing')
 
     manager.set_analyzed_data(analyzed_reviews, data)
+
+    # Add overall sentiment to each review
+    manager.set_feedback_sentiment(data)
 
     port = int(os.getenv('PORT', 8080))
     app.run(host='0.0.0.0', port=port, debug=False)

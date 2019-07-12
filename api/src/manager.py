@@ -56,6 +56,7 @@ def map_reviews_to_text(data):
     return mapped
 
 
+# TODO rename... returns 3 things rn
 def get_analyzed_reviews(reviews_to_text):
     analyzed_reviews = []
     analyzed_keywords = []
@@ -66,11 +67,14 @@ def get_analyzed_reviews(reviews_to_text):
         watson = watson_helper(reviews)
         for id in watson.input_dict:
             watson.analyze_review_text(id)
+
         watson.all_keywords()
         watson.meta_score()
         watson.keyword_relevance()
+
         analyzed_reviews.append(watson.raw_watson_dict)
         analyzed_keywords.append(watson.final_rv)
+
     return analyzed_reviews, analyzed_keywords
 
 
@@ -100,3 +104,15 @@ def get_reviews_with_keyword(keyword, analyzed_keywords, business):
                 reviews.append(review)
         # reviews.append(analyzed_reviews[id])
     return reviews
+
+
+# TODO - alright another super inefficient search...
+def set_feedback_sentiment(data):
+    print('Setting feedback sentiment')
+    watson = watson_helper({})
+    for business in data:
+        for review in business['reviews']:
+            review['sentiment'] = watson.get_sentiment(review['text'])
+
+
+
