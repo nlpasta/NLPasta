@@ -55,7 +55,7 @@ function split(text, keywords) {
     const indices = keywords.map(kw => text.indexOf(kw))
 
     if (indices.some(idx => idx > 0)) {
-      const index = Math.min(...(indices.map(i => i === -1 ? Infinity : i)))
+      const index = Math.min(...(indices.map(i => i === -1 && Infinity || i)))
       const kw = keywords[indices.indexOf(index)]
       const chunk = text.substring(0, index)
       const keyword = text.substring(index, index + kw.length)

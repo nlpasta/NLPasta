@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
-import { HashRouter, Route, Link } from 'react-router-dom'
+import { HashRouter, Route, Redirect, Switch } from 'react-router-dom'
 import styled from 'styled-components'
-import { getBusinesses, getReviews, getKeywords } from './api';
+import { getBusinesses, getKeywords } from './api';
 
 import {
   Header as CarbonHeader,
@@ -14,8 +14,9 @@ import {
   SideNavMenuItem,
   SideNavItem
 } from "carbon-components-react/lib/components/UIShell"
-import AppSwitcher20 from '@carbon/icons-react/lib/app-switcher/20';
-import KeywordReviews from './pages/KeywordReviews';
+import AppSwitcher20 from '@carbon/icons-react/lib/app-switcher/20'
+import KeywordReviews from './pages/KeywordReviews'
+import NotFound from './pages/NotFound'
 
 
 function Header(props) {
@@ -84,7 +85,7 @@ function Header(props) {
 function App() {
   const [ business, setBusiness ] = useState({ reviews: [] })
   const [ keywords, setKeywords ] = useState([])
-  const [ header, setHeader ] = useState(['reviews', 'all'])
+  const [ header, setHeader ] = useState('reviews / all')
 
   useEffect(() => {
     getBusinesses()
@@ -98,26 +99,35 @@ function App() {
       .then(setBusiness)
   }, [])
 
+  const keywordTexts = keywords.map(({ keyword }) => keyword.replace(/\s/g, '-'))
+
   return (
-    <div className="App">
+    <div className="App" style={{ height: '100%' }}>
       <HashRouter>
         <Header keywords={keywords} header={header} />
         <div id="nav-spacer" style={{ height: 'calc(48px + 1rem)' }} />
         {business && business.business_id &&
-        <div style={{
-          marginLeft: '256px',
-          padding: '0 1rem 0',
-          width: 'calc(100% - 256px)'
-        }}>
-            <Route exact path="/" render={() => {
-              setHeader('reviews / all')
-              return <KeywordReviews bid={business.business_id} />
-            }} />
-            <Route path="/:kw" render={({ match }) => {
-              setHeader(`keyword / ${match.params.kw.toLowerCase()}`)
-              return <KeywordReviews keyword={match.params.kw} bid={business.business_id} />
-            }} />
-        </div>
+          <div style={{
+            marginLeft: '256px',
+            padding: '0 1rem 0',
+            width: 'calc(100% - 256px)',
+            height: '100%'
+          }}>
+              <Route exact path="/" render={() => {
+                setHeader('reviews / all')
+                return <KeywordReviews bid={business.business_id} />
+              }} />
+              <Route path="/:kw" render={({ match }) => {
+                const keyword = match.params.kw
+
+                if (!keywordTexts.includes(keyword))
+                  return <Redirect to='/404' />
+
+                setHeader(`keyword / ${keyword.toLowerCase()}`)
+                return <KeywordReviews keyword={keyword} bid={business.business_id} />
+              }} />
+              <Route path="/404" component={NotFound} />
+          </div>
         }
       </HashRouter>
     </div>
