@@ -17,6 +17,7 @@ business_index = {}
 reviews_to_text = []
 
 analyzed_reviews = []
+analyzed_keywords = []
 
 
 @app.route('/api/businesses', methods=['GET'])
@@ -38,17 +39,26 @@ def get_reviews(id):
     return jsonify(reviews)
 
 
+# TODO rename this?
 @app.route('/api/business/<id>/keyword/<keyword>', methods=['GET'])
 def get_reviews_with_keyword(id, keyword):
-    reviews = []
+    parsed_keyword = ' '.join(keyword.split('-'))
+    index = business_index[id]
     # get reviews
-    manager.get_reviews_with_keyword(keyword, data)
+    reviews = manager.get_reviews_with_keyword(parsed_keyword, analyzed_keywords[index], data[index])
     return jsonify(reviews)
 
 
-@app.route('/api/analyzed_reviews', methods=['GET'])
-def get_analyzed_reviews():
-    return jsonify(analyzed_reviews)
+@app.route('/api/business/<id>/analyzed_reviews', methods=['GET'])
+def get_analyzed_reviews(id):
+    index = business_index[id]
+    return jsonify(analyzed_reviews[index])
+
+
+@app.route('/api/business/<id>/analyzed_keywords', methods=['GET'])
+def get_analyzed_keywords(id):
+    index = business_index[id]
+    return jsonify(analyzed_keywords[index])
 
 
 if __name__ == '__main__':
@@ -56,15 +66,15 @@ if __name__ == '__main__':
     businesses = manager.get_businesses(data)
     business_index = manager.map_id_to_index(businesses)
     reviews_to_text = manager.map_reviews_to_text(data)
+
     print('loaded data')
 
-    analyzed_reviews = manager.get_analyzed_reviews(reviews_to_text)
+    analyzed_reviews, analyzed_keywords = manager.get_analyzed_reviews(reviews_to_text)
 
-    # TODO set final_rv stuff
-    # temp_analyzed, final_rv = manager.get_analyzed_reviews(reviews_to_text)
+    print('Finished analyzing')
 
     manager.set_analyzed_data(analyzed_reviews, data)
 
     port = int(os.getenv('PORT', 8080))
-    app.run(host='0.0.0.0', port=port, debug=True)
+    app.run(host='0.0.0.0', port=port, debug=False)
 

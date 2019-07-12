@@ -58,6 +58,7 @@ def map_reviews_to_text(data):
 
 def get_analyzed_reviews(reviews_to_text):
     analyzed_reviews = []
+    analyzed_keywords = []
     counter = 0
     for reviews in reviews_to_text:
         print('Analyzing business %d' % counter)
@@ -65,15 +66,12 @@ def get_analyzed_reviews(reviews_to_text):
         watson = watson_helper(reviews)
         for id in watson.input_dict:
             watson.analyze_review_text(id)
+        watson.all_keywords()
+        watson.meta_score()
+        watson.keyword_relevance()
         analyzed_reviews.append(watson.raw_watson_dict)
-        # print(watson.raw_watson_dict)
-        # print(watson.keyword_dict)
-        #
-        # watson.all_keywords()
-        # watson.meta_score()
-        # watson.keyword_relevance()
-        # print(watson.final_rv)
-    return analyzed_reviews
+        analyzed_keywords.append(watson.final_rv)
+    return analyzed_reviews, analyzed_keywords
 
 
 def set_analyzed_data(analyzed_reviews, data):
@@ -88,6 +86,17 @@ def set_analyzed_data(analyzed_reviews, data):
             review['raw_watson'] = analyzed_reviews[index][review_id]
 
 
-def get_reviews_with_keyword(keyword, data):
-    pass
-
+def get_reviews_with_keyword(keyword, analyzed_keywords, business):
+    review_ids = []
+    for analyzed in analyzed_keywords:
+        if keyword == analyzed['keyword']:
+            review_ids = [item[0] for item in analyzed['relevance']]
+    # Fetch the reviews
+    reviews = []
+    # This is going to be a super inneficient search...
+    for id in review_ids:
+        for review in business['reviews']:
+            if review['review_id'] == id:
+                reviews.append(review)
+        # reviews.append(analyzed_reviews[id])
+    return reviews
