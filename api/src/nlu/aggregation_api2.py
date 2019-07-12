@@ -4,7 +4,6 @@ from raw_feedback import raw_feedback as rf
 from ibm_watson import NaturalLanguageUnderstandingV1
 from ibm_watson.natural_language_understanding_v1 \
     import Features, KeywordsOptions, SentimentOptions, SyntaxOptions, SyntaxOptionsTokens
-from nltk.corpus import wordnet as wn
 from keywordx import keywordx
 import copy
 
@@ -91,3 +90,5 @@ class aggregation_api2:
             rv.append((keyword, score_dict[keyword]))
         rv.sort(key=lambda tup: tup[1])
         return rv
+
+    def

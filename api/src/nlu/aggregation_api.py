@@ -3,7 +3,6 @@ from analyzed_feedback import analyzed_feedback
 from ibm_watson import NaturalLanguageUnderstandingV1
 from ibm_watson.natural_language_understanding_v1 \
     import Features, KeywordsOptions, SentimentOptions, SyntaxOptions, SyntaxOptionsTokens
-from nltk.corpus import wordnet as wn
 
 class aggregation_api:
     key = '5kLneMxCf9SLzD3grPVYfgiYx9Xtx3Arm52SMnrTASQB'
