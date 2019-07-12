@@ -1,3 +1,4 @@
+"""
 from aggregation_api2 import aggregation_api2
 from raw_feedback import raw_feedback as rf
 import json
@@ -36,4 +37,24 @@ for raw_feedback in raw_feedback_array:
 
 keyword_array = test.get_keyword_array(analyzed_feedback_array)
 print(keyword_array)
-print(test.sort_scores(test.score(keyword_array)))
+print(test.sort_scores(test.score(keyword_array)))"""
+
+import json
+from aggregation_api3 import watson_helper
+
+with open('../data.json', 'r') as mock:
+    data = {review['review_id']: review['text']
+            for review in json.load(mock)[0]['reviews'][:5]}
+
+
+watson = watson_helper(data)
+for id in watson.input_dict:
+    watson.analyze_review_text(id)
+
+print(watson.raw_watson_dict)
+print(watson.keyword_dict)
+
+watson.all_keywords()
+watson.meta_score()
+watson.keyword_relevance()
+print(watson.final_rv)
