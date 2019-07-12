@@ -1,113 +1,125 @@
 import React, { useEffect, useState } from 'react';
+import { HashRouter, Route, Link } from 'react-router-dom'
 import styled from 'styled-components'
-import { getBusinesses, getReviews } from './api';
+import { getBusinesses, getReviews, getKeywords } from './api';
 
-import Container from './components/Container'
 import {
   Header as CarbonHeader,
   HeaderName,
-  HeaderNavigation,
-  HeaderMenu,
-  HeaderMenuItem
+  HeaderGlobalBar,
+  HeaderGlobalAction,
+  SideNav,
+  SideNavItems,
+  SideNavMenu,
+  SideNavMenuItem,
+  SideNavItem
 } from "carbon-components-react/lib/components/UIShell"
-import { Tabs, Tab } from 'carbon-components-react'
-import ReviewCard from './components/ReviewCard';
+import AppSwitcher20 from '@carbon/icons-react/lib/app-switcher/20';
+import KeywordReviews from './pages/KeywordReviews';
 
 
-function Header() {
+function Header(props) {
+  const Wrapper = styled(CarbonHeader)`
+    background-color: #152934 !important;
+
+    .bx--side-nav {
+      box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);
+    }
+  `
+
+  const { keywords, header } = props
+  const negativeKeywords = keywords.slice(0, 10)
+  const positiveKeywords = keywords.slice(keywords.length - 10, keywords.length)
+
   return (
-    <CarbonHeader aria-label="IBM Platform Name">
-      <Container>
-        <HeaderName href="#" prefix="IBM">
-          [Platform]
-        </HeaderName>
-      {/* <HeaderNavigation aria-label="IBM [Platform]">
-        <HeaderMenuItem href="#">Link 1</HeaderMenuItem>
-        <HeaderMenuItem href="#">Link 2</HeaderMenuItem>
-        <HeaderMenuItem href="#">Link 3</HeaderMenuItem>
-        <HeaderMenu aria-label="Link 4" menuLinkName="Link 4">
-          <HeaderMenuItem href="#">Sub-link 1</HeaderMenuItem>
-          <HeaderMenuItem href="#">Sub-link 2</HeaderMenuItem>
-          <HeaderMenuItem href="#">Sub-link 3</HeaderMenuItem>
-        </HeaderMenu>
-      </HeaderNavigation> */}
-      </Container>
-    </CarbonHeader>
-  )
-}
-
-const TabBar = styled(Tabs)`
-  ul {
-    width: 100%;
-  }
-
-  a, a:active, a:focus {
-    width: inherit;
-  }
-`
-
-
-function TabContent({ reviews }) {
-  return (
-    <>
-      {reviews.map(review => (
-        <ReviewCard
-          key={review.review_id}
-          review={{...review, sentiment: 4, topics: ['food'] }}
-        />
-      ))}
-    </>
+    <Wrapper
+      aria-label="IBM Platform Name"
+      style={{ backgroundColor: '#152934' }}
+    >
+      <HeaderName href="#" prefix="" style={{ fontSize: '1.3rem' }}>
+        NLPasta
+      </HeaderName>
+      <SideNav
+        aria-label="Side navigation"
+        expanded
+      >
+        <SideNavItems>
+          <SideNavItem>
+            <div style={{
+              width: '100%',
+              padding: '0 16px',
+              margin: '1rem 0 1.6rem',
+              fontSize: '1.2rem',
+              fontWeight: '400'
+            }}>
+              {header}
+            </div>
+          </SideNavItem>
+          <SideNavMenu title="Positive Keywords" defaultExpanded>
+            {positiveKeywords.reverse().map(({ keyword, meta_score }) => (
+              <SideNavMenuItem key={keyword} href={`#/${keyword.replace(/\s/g, '-')}`}>
+                {`${keyword} (${meta_score.toFixed(2)})`}
+              </SideNavMenuItem>
+            ))}
+          </SideNavMenu>
+          <div style={{ height: '1rem' }} />
+          <SideNavMenu title="Negative Keywords" defaultExpanded>
+            {negativeKeywords.map(({ keyword, meta_score }) => (
+              <SideNavMenuItem key={keyword} href={`#/${keyword.replace(/\s/g, '-')}`}>
+                {`${keyword} (${meta_score.toFixed(2)})`}
+              </SideNavMenuItem>
+            ))}
+          </SideNavMenu>
+        </SideNavItems>
+      </SideNav>
+      <HeaderGlobalBar>
+        <HeaderGlobalAction aria-label="IDFK" >
+          <AppSwitcher20 />
+        </HeaderGlobalAction>
+      </HeaderGlobalBar>
+    </Wrapper>
   )
 }
 
 function App() {
   const [ business, setBusiness ] = useState({ reviews: [] })
-  const [ reviews, setReviews ] = useState([])
+  const [ keywords, setKeywords ] = useState([])
+  const [ header, setHeader ] = useState(['reviews', 'all'])
 
   useEffect(() => {
     getBusinesses()
-      .then(([ first, ..._ ] ) => first)
+      .then(([ _, second ] ) => second)
       .then(business => {
-        getReviews(business.business_id).then(setReviews)
+        getKeywords(business.business_id)
+          .then(keywords => keywords.sort((a, b) => a.meta_score - b.meta_score))
+          .then(setKeywords)
         return business
       })
       .then(setBusiness)
   }, [])
 
-  const positive = reviews.filter(review => review.cool > 3)
-
-  const tabs = [
-    {
-      label: `All Reviews (${reviews.length})`,
-      component:<TabContent reviews={reviews} />
-    },
-    {
-      label: `Cool (${positive.length})`,
-      component: <TabContent reviews={positive} />
-    },
-    {
-      label: `Negative (${reviews.length})`,
-      component:<TabContent reviews={reviews} />
-    },
-    {
-      label: `Questions (${reviews.length})`,
-      component:<TabContent reviews={reviews} />
-    },
-    {
-      label: `Concerns (${reviews.length})`,
-      component:<TabContent reviews={reviews} />
-    },
-  ]
-
   return (
     <div className="App">
-      <Header />
-      <div id='nav-spacer' style={{ height: 'calc(48px + 1rem)' }} />
-      <Container>
-        <TabBar>
-          {tabs.map(({ label, component }) => <Tab key={label} label={label}>{component}</Tab>)}
-        </TabBar>
-      </Container>
+      <HashRouter>
+        <Header keywords={keywords} header={header} />
+        <div id="nav-spacer" style={{ height: 'calc(48px + 1rem)' }} />
+        {business && business.business_id &&
+        <div style={{
+          marginLeft: '256px',
+          padding: '0 1rem 0',
+          width: 'calc(100% - 512px)'
+        }}>
+            <Route exact path="/" render={() => {
+              setHeader('reviews / all')
+              return <KeywordReviews bid={business.business_id} />
+            }} />
+            <Route path="/:kw" render={({ match }) => {
+              setHeader(`keyword / ${match.params.kw.toLowerCase()}`)
+              return <KeywordReviews keyword={match.params.kw} bid={business.business_id} />
+            }} />
+        </div>
+        }
+      </HashRouter>
     </div>
   );
 }

@@ -25,3 +25,11 @@ export function getBusinesses() {
 export function getReviews(bid, page=0) {
   return get(`/business/${bid}/reviews`, { page }).then(log)
 }
+
+export function getKeywords(bid) {
+  return get(`/business/${bid}/analyzed_keywords`).then(log)
+}
+
+export function getReviewsByKeyword(bid, keyword) {
+  return get(`/business/${bid}/keyword/${keyword}`).then(log)
+}
