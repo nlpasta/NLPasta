@@ -50,7 +50,7 @@ function Header(props) {
               padding: '0 16px',
               margin: '1rem 0 1.6rem',
               fontSize: '1.2rem',
-              fontWeight: '400'
+              fontWeight: '600'
             }}>
               {header}
             </div>
@@ -107,7 +107,7 @@ function App() {
         <div style={{
           marginLeft: '256px',
           padding: '0 1rem 0',
-          width: 'calc(100% - 512px)'
+          width: 'calc(100% - 256px)'
         }}>
             <Route exact path="/" render={() => {
               setHeader('reviews / all')

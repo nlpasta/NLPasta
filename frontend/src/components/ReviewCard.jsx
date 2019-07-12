@@ -43,7 +43,7 @@ const Content = styled.p`
 const Keyword = styled.span`
   color: ${({ sentiment }) => sentiment > 0 ? 'mediumseagreen' : 'tomato' };
   padding-bottom: 3px;
-  border-bottom: 0.13rem solid ${({ sentiment }) => sentiment > 0 ? 'mediumseagreen' : 'tomato' };
+  border-bottom: 0.125rem solid ${({ sentiment }) => sentiment > 0 ? 'mediumseagreen' : 'tomato' };
 `
 
 const Text = styled.span``
