@@ -7,7 +7,6 @@ from raw_feedback import raw_feedback as rf
 from ibm_watson import NaturalLanguageUnderstandingV1
 from ibm_watson.natural_language_understanding_v1 \
     import Features, KeywordsOptions, SentimentOptions, SyntaxOptions, SyntaxOptionsTokens
-from nltk.corpus import wordnet as wn
 from keywordx import keywordx
 import copy
 

@@ -2,7 +2,7 @@ import json
 from ibm_watson import NaturalLanguageUnderstandingV1
 from ibm_watson.natural_language_understanding_v1 \
     import Features, KeywordsOptions, SentimentOptions, SyntaxOptions, SyntaxOptionsTokens
-from keywordx import keywordx as kw
+from .keywordx import keywordx as kw
 
 class watson_helper:
     def __init__(self, input_dict):
