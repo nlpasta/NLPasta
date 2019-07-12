@@ -16,6 +16,8 @@ business_index = {}
 # Maps review ids to corresponding review text
 reviews_to_text = []
 
+analyzed_reviews = []
+
 
 @app.route('/api/businesses', methods=['GET'])
 def get_businesses():
@@ -44,17 +46,24 @@ def get_reviews_with_keyword(id, keyword):
     return jsonify(reviews)
 
 
+@app.route('/api/analyzed_reviews', methods=['GET'])
+def get_analyzed_reviews():
+    return jsonify(analyzed_reviews)
+
+
 if __name__ == '__main__':
     data = manager.load_data('src/data.json')
     businesses = manager.get_businesses(data)
     business_index = manager.map_id_to_index(businesses)
     reviews_to_text = manager.map_reviews_to_text(data)
-    print(reviews_to_text[0])
-    # anaysis
-    r_to_text = {}
-    # r_to_analysis, keywords = manager.robertsstuff(r_to_text)
+    print('loaded data')
 
-    # merge reviews with r_to_analysis
+    analyzed_reviews = manager.get_analyzed_reviews(reviews_to_text)
+
+    # TODO set final_rv stuff
+    # temp_analyzed, final_rv = manager.get_analyzed_reviews(reviews_to_text)
+
+    manager.set_analyzed_data(analyzed_reviews, data)
 
     port = int(os.getenv('PORT', 8080))
     app.run(host='0.0.0.0', port=port, debug=True)
