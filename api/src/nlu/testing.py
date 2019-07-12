@@ -43,8 +43,10 @@ print(test.sort_scores(test.score(keyword_array)))"""
 import json
 from aggregation_api3 import watson_helper
 
-with open('sample_feedback.json', 'r') as mock:
-    data = json.load(mock)
+with open('../data.json', 'r') as mock:
+    data = {review['review_id']: review['text']
+            for review in json.load(mock)[0]['reviews'][:5]}
+
 
 watson = watson_helper(data)
 for id in watson.input_dict:

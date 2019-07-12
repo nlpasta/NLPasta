@@ -74,7 +74,7 @@ class watson_helper:
         final_rv = []
         for tup in rv:
             if tup[1] != 0:
-                final_rv.append(tup[0])
+                final_rv.append((tup[0], tup[1]))
         return final_rv
 
     """
